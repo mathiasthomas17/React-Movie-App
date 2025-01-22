@@ -1,60 +1,11 @@
 import React from 'react'
 import MovieCard from '../components/MovieCard';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
+import '../css/Home.css'
+import { searchMovies, getPopularMovies } from '../services/api';
 
 const Home = () => {
-    const movies = [
-        {
-          id: 1,
-          title: "The Shawshank Redemption",
-          releaseDate: "1994-09-22"
-        },
-        {
-          id: 2,
-          title: "The Dark Knight",
-          releaseDate: "2008-07-18"
-        },
-        {
-          id: 3,
-          title: "Inception",
-          releaseDate: "2010-07-16"
-        },
-        {
-          id: 4,
-          title: "Forrest Gump",
-          releaseDate: "1994-07-06"
-        },
-        {
-          id: 5,
-          title: "The Matrix",
-          releaseDate: "1999-03-31"
-        },
-        {
-          id: 6,
-          title: "The Godfather",
-          releaseDate: "1972-03-24"
-        },
-        {
-          id: 7,
-          title: "Pulp Fiction",
-          releaseDate: "1994-10-14"
-        },
-        {
-          id: 8,
-          title: "Fight Club",
-          releaseDate: "1999-10-15"
-        },
-        {
-          id: 9,
-          title: "The Lord of the Rings: The Fellowship of the Ring",
-          releaseDate: "2001-12-19"
-        },
-        {
-          id: 10,
-          title: "The Avengers",
-          releaseDate: "2012-05-04"
-        }
-      ];
+  
     //   Handle Submit Function
       const handleSumit = (e)=>{
         e.preventDefault()
@@ -63,6 +14,26 @@ const Home = () => {
       }
     //   State
       const [searchQuerry, setSearchQuerry] = useState('')
+      const [movies,setMovies] = useState([])
+      const [error,setError ] = useState(null)
+      const [loading,setLoading] = useState(true)
+
+      useEffect(()=>{
+        const loadPopularMovies = async()=>{
+          try{
+            const popularMovies = await getPopularMovies()
+            setMovies(popularMovies)
+            console.log(movies)
+          }catch(err){
+            console.log(err)
+            setError('Failed To Load Movies')
+          }
+          finally{
+            setLoading(false)
+          }
+        }
+        loadPopularMovies()
+      },[])
       
   return (
     <>
