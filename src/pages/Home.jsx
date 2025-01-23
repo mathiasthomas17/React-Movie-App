@@ -6,12 +6,12 @@ import { searchMovies, getPopularMovies } from '../services/api';
 
 const Home = () => {
   
-    //   Handle Submit Function
-      const handleSumit = (e)=>{
-        e.preventDefault()
-        alert(searchQuerry)
-        setSearchQuerry('')
-      }
+    // //   Handle Submit Function
+    //   const handleSumit = (e)=>{
+    //     e.preventDefault()
+    //     alert(searchQuerry)
+    //     setSearchQuerry('')
+    //   }
     //   State
       const [searchQuerry, setSearchQuerry] = useState('')
       const [movies,setMovies] = useState([])
@@ -34,6 +34,26 @@ const Home = () => {
         }
         loadPopularMovies()
       },[])
+
+      // Search
+      const handleSumit = async (e)=>{
+        e.preventDefault()
+        if(!searchQuerry.trim()) return
+        if(loading) return
+
+        setLoading(true)
+        try {
+          const searchResults = await searchMovies(searchQuerry)
+          setMovies(searchResults)
+          setError(null)
+        }catch(err){
+          console.log(err)
+          setError('Failed to search movie')
+
+        }finally{
+          setLoading(false)
+        }
+      }
       
   return (
     <>
@@ -48,12 +68,15 @@ const Home = () => {
         <button type='submit' className='search-button'> Search</button>
 
     </form>
-    <div className='home'>
+    {error && <div className='error-message'>{error}</div>}
+    {loading ?<div className='loading'>Loading ...</div> : 
         <div className='movies-grid'>
             {movies.map ((movie)=>(
                 movie.title.toLocaleLowerCase().startsWith(searchQuerry) && <MovieCard movie={movie} key={movie.id}/>
             ))}
-        </div>
+        </div>}
+    <div className='home'>
+        
     </div>
     </>
   )

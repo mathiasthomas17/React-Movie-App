@@ -17,7 +17,7 @@ const MovieCard = ({movie}) => {
             </div>
             <div>
                 <h2 className='movie-info'>{movie.title}</h2>
-                <p>{movie.release_date}</p>
+                <p>{movie.release_date?.split('-')[0]}</p>
             </div>
         </div>
   )
